@@ -29,19 +29,19 @@ int main(void) {
 
 		if (Keyboard::isKeyPressed(Keyboard::Left))
 		{
-			player.move(-1, 0);
+			player.move(-3, 0);
 		}
 		else if (Keyboard::isKeyPressed(Keyboard::Right))
 		{
-			player.move(1, 0);
+			player.move(3, 0);
 		}
 		else if (Keyboard::isKeyPressed(Keyboard::Up))
 		{
-			player.move(0, -1);
+			player.move(0, -3);
 		}
 		else if (Keyboard::isKeyPressed(Keyboard::Down))
 		{
-			player.move(0, 1);
+			player.move(0, 3);
 		}
 		window.clear(Color::Black); // 검정색으로 지워줌
 
