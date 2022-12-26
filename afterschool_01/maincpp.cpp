@@ -6,6 +6,7 @@ using namespace sf;
 int main(void) {
 
 	RenderWindow window(VideoMode(640, 480), "AfterSchool"); // 640*480 사이즈의 윈도우 창을 만듬
+	window.setFramerateLimit(60); // 1초에 60으로 제한함
 
 	RectangleShape player;
 	player.setSize(Vector2f(40, 40));
@@ -25,6 +26,24 @@ int main(void) {
 				window.close(); // 윈도우를 닫는다 
 			}
 		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Left))
+		{
+			player.move(-1, 0);
+		}
+		else if (Keyboard::isKeyPressed(Keyboard::Right))
+		{
+			player.move(1, 0);
+		}
+		else if (Keyboard::isKeyPressed(Keyboard::Up))
+		{
+			player.move(0, -1);
+		}
+		else if (Keyboard::isKeyPressed(Keyboard::Down))
+		{
+			player.move(0, 1);
+		}
+
 		window.draw(player);
 		window.display();
 	}
