@@ -18,6 +18,7 @@ int main(void) {
 	enemy.setSize(Vector2f(70, 70));
 	enemy.setPosition(500, 300);
 	enemy.setFillColor(Color::Yellow);
+	int enemy_life = 1;
 
 	//윈도우가 열려있을 때까지 반복
 	while (window.isOpen())
@@ -50,14 +51,21 @@ int main(void) {
 			player.move(0, player_speed);
 		}
 
-		if (player.getGlobalBounds().intersects(enemy.getGlobalBounds()))
+		//enemy와의 충돌
+		if (enemy_life > 0)
 		{
-			printf("enemy와 충돌\n");
+			if (player.getGlobalBounds().intersects(enemy.getGlobalBounds()))
+			{
+				printf("enemy와 충돌\n");
+				enemy_life -= 1;
+			}
 		}
+		
 		window.clear(Color::Black); // 검정색으로 지워줌
 
 		// draw는 나중에 호출할수록 우선순위가 높아짐
-		window.draw(enemy);
+		if(enemy_life > 0)
+			window.draw(enemy);
 		window.draw(player);
 		
 		window.display();
