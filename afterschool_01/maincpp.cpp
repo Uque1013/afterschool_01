@@ -43,6 +43,7 @@ int main(void) {
 		{
 			player.move(0, 1);
 		}
+		window.clear(Color::Black); // 검정색으로 지워줌
 
 		window.draw(player);
 		window.display();
