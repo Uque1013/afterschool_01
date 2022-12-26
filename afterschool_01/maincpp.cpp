@@ -14,6 +14,11 @@ int main(void) {
 	player.setFillColor(Color::Red);
 	int player_speed = 5;
 
+	RectangleShape enemy;
+	enemy.setSize(Vector2f(70, 70));
+	enemy.setPosition(500, 300);
+	enemy.setFillColor(Color::Yellow);
+
 	//윈도우가 열려있을 때까지 반복
 	while (window.isOpen())
 	{
@@ -46,7 +51,10 @@ int main(void) {
 		}
 		window.clear(Color::Black); // 검정색으로 지워줌
 
+		// draw는 나중에 호출할수록 우선순위가 높아짐
 		window.draw(player);
+		window.draw(enemy);
+
 		window.display();
 	}
 
