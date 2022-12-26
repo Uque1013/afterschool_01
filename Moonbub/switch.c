@@ -4,11 +4,18 @@ int main(void)
 {
 	int a = 1;
 
-	if (a == 1)
+	switch (a)
+	{
+	case 1:
 		printf("apple");
-	else if (a == 2)
+		break;
+	case 2:
 		printf("banana");
-	else
+		break;
+	default:
 		printf("mango");
+		break; // 생략 가능
+	}
+	
 	return 0;
 }
