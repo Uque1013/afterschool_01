@@ -11,6 +11,7 @@ struct Player
 	RectangleShape sprite;
 	int speed;
 	int score;
+	int life;
 };
 
 struct Enemy
@@ -58,6 +59,7 @@ int main(void) {
 	player.sprite.setFillColor(Color::Red);
 	player.speed = 5;
 	player.score = 0;
+	player.life = 3;
 
 
 	// 적(enemy)
@@ -146,18 +148,24 @@ int main(void) {
 					printf("enemy[%d]와 충돌\n", i);
 					enemy[i].life -= 1;
 					player.score += enemy[i].score;
+
 					// TODO : 코드 refactoring 필요
 					if (enemy[i].life == 0)
 					{
 						enemy[i].explosion_sound.play();
 					}
 				}
+				// 적이 왼쪽 끝에 진입하려는 순간
+				else if (enemy[i].sprite.getPosition().x < 0)
+				{
+					player.life -= 1;
+				}
 				enemy[i].sprite.move(enemy[i].speed, 0);
 			}
 			
 		}
 
-		sprintf(info, "score:%d  time:%d", player.score,spent_time/1000);
+		sprintf(info, "life:%d  score:%d  time:%d", player.life, player.score, spent_time / 1000);
 		text.setString(info);
 
 		window.clear(Color::Black); // 검정색으로 지워줌
