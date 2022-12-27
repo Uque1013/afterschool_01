@@ -17,9 +17,12 @@ int main(void) {
 	player.setPosition(100, 100);
 	player.setFillColor(Color::Red);
 	int player_speed = 5;
+	int player_score = 0;
 
 	RectangleShape enemy[5];
 	int enemy_life[5];
+	int enemy_score = 100; // 적 잡을 때 얻는 점수
+
 	//  enemy 초기화
 	for (int i = 0; i < 5; i++)
 	{
@@ -42,7 +45,7 @@ int main(void) {
 			case Event::Closed:
 				window.close(); // 윈도우를 닫는다 
 				break;
-				// 키보드를 눌렀을 때
+				// 키보드를 눌렀을 때 (누른 순간만을 감지)
 			case Event::KeyPressed:
 			{
 				// 스페이스 누르면 모든 enemy 다시 출현
@@ -90,10 +93,13 @@ int main(void) {
 				{
 					printf("enemy[%d]와 충돌\n", i);
 					enemy_life[i] -= 1;
+					player_score += enemy_score;
+
 				}
 			}
 		}
 
+		printf("score : %d\n", player_score);
 
 		window.clear(Color::Black); // 검정색으로 지워줌
 
