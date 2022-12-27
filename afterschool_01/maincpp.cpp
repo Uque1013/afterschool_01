@@ -20,6 +20,7 @@ int main(void) {
 	text.setCharacterSize(50); // 글자크기 설정
 	text.setFillColor(Color(255, 255, 255));
 	text.setPosition(0, 0);
+	char info[40];
 	text.setString("score");
 
 	RectangleShape player;
@@ -32,6 +33,7 @@ int main(void) {
 	RectangleShape enemy[5];
 	int enemy_life[5];
 	int enemy_score = 100; // 적 잡을 때 얻는 점수
+	
 
 	//  enemy 초기화
 	for (int i = 0; i < 5; i++)
@@ -109,7 +111,8 @@ int main(void) {
 			}
 		}
 
-		printf("score : %d\n", player_score);
+		sprintf(info,"score : %d\n", player_score);
+		text.setString(info);
 
 		window.clear(Color::Black); // 검정색으로 지워줌
 
