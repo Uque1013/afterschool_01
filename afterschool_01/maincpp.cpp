@@ -26,7 +26,13 @@ int main(void) {
 	text.setFillColor(Color(255, 255, 255));
 	text.setPosition(0, 0);
 	char info[40];
-	text.setString("score");
+	
+	// 배경
+	Texture bg_texture;
+	bg_texture.loadFromFile("./resources/images/background.jpg");
+	Sprite bg_sprite;
+	bg_sprite.setTexture(bg_texture);
+	bg_sprite.setPosition(0, 0);
 
 	// player
 	RectangleShape player;
@@ -133,6 +139,7 @@ int main(void) {
 		text.setString(info);
 
 		window.clear(Color::Black); // 검정색으로 지워줌
+		window.draw(bg_sprite);
 
 		// draw는 나중에 호출할수록 우선순위가 높아짐
 		for (int i = 0; i < 5; i++)
@@ -141,6 +148,7 @@ int main(void) {
 				window.draw(enemy[i]);
 		window.draw(player);
 		window.draw(text);
+		
 
 		window.display();
 	}
