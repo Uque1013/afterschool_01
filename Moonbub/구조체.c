@@ -1,13 +1,20 @@
 #include <stdio.h>
 
+struct Saram {
+	int hp;
+	int speed;
+};
+
 int main(void) {
-	int player_hp = 5;
-	int player_speed = 7;
+	struct Saram player;
+	player.hp = 5;
+	player.speed = 7;
 
-	int enemy_hp = 2;
-	int enemy_speed = 5;
+	struct Saram enemy;
+	enemy.hp = 2;
+	enemy.speed = 5;
 
-	printf("플레이어 체력:%d 플레이어 속도:%d\n", player_hp, player_speed);
+	printf("플레이어 체력:%d 플레이어 속도:%d\n", player.hp, player.speed);
 
 	return 0;
 }
