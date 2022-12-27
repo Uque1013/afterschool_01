@@ -44,8 +44,10 @@ int main(void) {
 
 
 	// 적(enemy)
-	RectangleShape enemy[5];
-	int enemy_life[5];
+	const int ENEMY_NUM = 10;
+	RectangleShape enemy[ENEMY_NUM];
+	int enemy_life[ENEMY_NUM];
+	int enemy_speed[ENEMY_NUM];
 	int enemy_score = 100; // 적 잡을 때 얻는 점수
 	SoundBuffer enemy_explosion_buffer;
 	enemy_explosion_buffer.loadFromFile("./resources/sounds/rumble.flac");
@@ -53,12 +55,13 @@ int main(void) {
 	enemy_explosion_sound.setBuffer(enemy_explosion_buffer);
 
 	//  enemy 초기화
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < ENEMY_NUM; i++)
 	{
 		enemy[i].setSize(Vector2f(70, 70));
 		enemy[i].setFillColor(Color::Yellow);
 		enemy_life[i] = 1;
 		enemy[i].setPosition(rand()%300+300, rand()%380);
+		enemy_speed[i] = -(rand() % 10 + 1);
 	}
 	
 
@@ -80,7 +83,7 @@ int main(void) {
 				// 스페이스 누르면 모든 enemy 다시 출현
 				if (event.key.code == Keyboard::Space)
 				{
-					for (int i = 0; i < 5; i++)
+					for (int i = 0; i < ENEMY_NUM; i++)
 					{
 						enemy[i].setSize(Vector2f(70, 70));
 						enemy[i].setFillColor(Color::Yellow);
@@ -115,11 +118,12 @@ int main(void) {
 		} // 방향키 end
 
 
-		//enemy와의 충돌
-		for (int i = 0; i < 5; i++)
+		
+		for (int i = 0; i < ENEMY_NUM; i++)
 		{
 			if (enemy_life[i] > 0)
 			{
+				//enemy와의 충돌
 				if (player.getGlobalBounds().intersects(enemy[i].getGlobalBounds()))
 				{
 					printf("enemy[%d]와 충돌\n", i);
@@ -131,6 +135,7 @@ int main(void) {
 						enemy_explosion_sound.play();
 					}
 				}
+				enemy[i].move(enemy_speed[i], 0);
 			}
 			
 		}
@@ -142,8 +147,7 @@ int main(void) {
 		window.draw(bg_sprite);
 
 		// draw는 나중에 호출할수록 우선순위가 높아짐
-		for (int i = 0; i < 5; i++)
-
+		for (int i = 0; i < ENEMY_NUM; i++)
 			if (enemy_life[i] > 0)
 				window.draw(enemy[i]);
 		window.draw(player);
