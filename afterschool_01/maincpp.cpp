@@ -12,6 +12,16 @@ int main(void) {
 
 	srand(time(0));
 
+	Font font;
+	font.loadFromFile("C:\\Windows\\Fonts\\arial.ttf");
+
+	Text text;
+	text.setFont(font);
+	text.setCharacterSize(50); // 글자크기 설정
+	text.setFillColor(Color(255, 255, 255));
+	text.setPosition(0, 0);
+	text.setString("score");
+
 	RectangleShape player;
 	player.setSize(Vector2f(40, 40));
 	player.setPosition(100, 100);
@@ -109,6 +119,7 @@ int main(void) {
 			if (enemy_life[i] > 0)
 				window.draw(enemy[i]);
 		window.draw(player);
+		window.draw(text);
 
 		window.display();
 	}
