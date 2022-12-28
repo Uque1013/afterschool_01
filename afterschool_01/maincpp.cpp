@@ -14,6 +14,14 @@ struct Player
 	int life;
 };
 
+// 총알
+struct Bullet
+{
+	RectangleShape sprite;
+	int speed;
+	int is_fired; // 발사 여부
+};
+
 struct Enemy
 {
 	RectangleShape sprite;
@@ -84,6 +92,13 @@ int main(void) {
 	player.speed = 5;
 	player.score = 0;
 	player.life = 10;
+
+	// 총알
+	struct Bullet bullet;
+	bullet.sprite.setSize(Vector2f(10, 10));
+	bullet.sprite.setPosition(150, 120); // 임시 테스트
+	bullet.speed = 20;
+	bullet.is_fired = 0;
 
 	// 적(enemy)
 	struct Enemy enemy[ENEMY_NUM];
@@ -215,6 +230,7 @@ int main(void) {
 				window.draw(enemy[i].sprite);
 		window.draw(player.sprite);
 		window.draw(text);
+		window.draw(bullet.sprite);
 		
 		if (is_gameover)
 		{
