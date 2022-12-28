@@ -22,6 +22,7 @@ struct Enemy
 	int life;
 	SoundBuffer explosion_buffer;
 	Sound explosion_sound;
+	int  respawn_time;
 };
 
 // 전역변수
@@ -41,6 +42,14 @@ int main(void) {
 	long start_time = clock(); // 게임 시작 시간
 	long spent_time;					// 게임 진행 시간
 	int is_gameover = 0;
+
+	// BGM
+	SoundBuffer BGM_buffer;
+	BGM_buffer.loadFromFile("./resources/sounds/BGM.ogg");
+	Sound BGM_sound;
+	BGM_sound.setBuffer(BGM_buffer);
+	BGM_sound.setLoop(1); // BGM 무한반복
+	BGM_sound.play();
 
 	// text
 	Font font;
@@ -74,7 +83,7 @@ int main(void) {
 	player.sprite.setFillColor(Color::Red);
 	player.speed = 5;
 	player.score = 0;
-	player.life = 3;
+	player.life = 10;
 
 	// 적(enemy)
 	struct Enemy enemy[ENEMY_NUM];
@@ -86,6 +95,7 @@ int main(void) {
 		enemy[i].explosion_buffer.loadFromFile("./resources/sounds/rumble.flac");
 		enemy[i].explosion_sound.setBuffer(enemy[i].explosion_buffer);
 		enemy[i].score = 100;  // 적 잡을 때 얻는 점수
+		enemy[i].respawn_time = 8;
 
 		enemy[i].sprite.setSize(Vector2f(70, 70));
 		enemy[i].sprite.setFillColor(Color::Yellow);
@@ -151,15 +161,15 @@ int main(void) {
 		
 		for (int i = 0; i < ENEMY_NUM; i++)
 		{
-			// 10초마다 enemy 잰
-			if (spent_time % (1000 * 10) < 10)
+			// 10초마다 enemy 리젠
+			if (spent_time % (1000 * enemy[i].respawn_time) < 1000 / 60 + 1)
 			{
 					enemy[i].sprite.setSize(Vector2f(70, 70));
 					enemy[i].sprite.setFillColor(Color::Yellow);
 					enemy[i].sprite.setPosition(rand() % 300 + W_WIDTH * 0.9, rand() % 380);
 					enemy[i].life = 1;
 					// 10초마다 enemy 속도 + 1
-					enemy[i].speed = -(rand() % 10 + 1 + (spent_time / 1000 / 10));
+					enemy[i].speed = -(rand() % 10 + 1 + (spent_time / 1000 / enemy[i].respawn_time));
 			}
 
 			if (enemy[i].life > 0)
