@@ -37,6 +37,8 @@ struct Enemy
 struct Textures
 {
 	Texture bg; // 배경 이미지
+	Texture bullet; // 총알 이미지
+	Texture enemy; // 적 이미지
 	Texture gameover; // 게임오버 이미지 
 	Texture player; // 플레이어 이미지
 };
@@ -58,6 +60,8 @@ int main(void) {
 
 	struct Textures t;
 	t.bg.loadFromFile("./resources/images/background.png");
+	t.bullet.loadFromFile("./resources/images/3d_blueheart.png");
+	t.enemy.loadFromFile("./resources/images/mongi.png");
 	t.gameover.loadFromFile("./resources/images/gameover.png"); 
 	t.player.loadFromFile("./resources/images/player.png");
 
@@ -104,17 +108,18 @@ int main(void) {
 	struct Player player;
 	player.sprite.setTexture(&t.player);
 	player.sprite.setSize(Vector2f(211, 213));
-	player.sprite.setPosition(100, 100);
+	player.sprite.setPosition(80, 80);
 	player.x = player.sprite.getPosition().x;
 	player.y = player.sprite.getPosition().y;
 	player.speed = 5;
 	player.score = 0;
 	player.life = 10;
-	player.sprite.setScale(-1, 1);
+	player.sprite.setScale(-1, 1); // 이미지 좌우 반전
 
 	// 총알
 	struct Bullet bullet;
-	bullet.sprite.setSize(Vector2f(10, 10));
+	bullet.sprite.setTexture(&t.bullet);
+	bullet.sprite.setSize(Vector2f(100, 100));
 	bullet.sprite.setPosition(player.x + 50, player.y + 15); // 임시 테스트
 	bullet.speed = 20;
 	bullet.is_fired = 0;
@@ -131,8 +136,8 @@ int main(void) {
 		enemy[i].score = 100;  // 적 잡을 때 얻는 점수
 		enemy[i].respawn_time = 8;
 
-		enemy[i].sprite.setSize(Vector2f(70, 70));
-		enemy[i].sprite.setFillColor(Color::Yellow);
+		enemy[i].sprite.setTexture(&t.enemy);
+		enemy[i].sprite.setSize(Vector2f(100, 100));
 		enemy[i].sprite.setPosition(rand() % 300 + W_WIDTH * 0.9, rand() % 380);
 		enemy[i].life = 1;
 		enemy[i].speed = -(rand() % 10 + 1);
