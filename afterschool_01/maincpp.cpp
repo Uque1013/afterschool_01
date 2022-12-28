@@ -34,6 +34,13 @@ struct Enemy
 	int  respawn_time;
 };
 
+struct Textures
+{
+	Texture bg; // 배경 이미지
+	Texture gameover; // 게임오버 이미지 
+	Texture player; // 플레이어 이미지
+};
+
 //obj1과 2의 충돌여부, 충돌하면 1 반환, 안하면 0 반환                                                                                                                                            
 int is_collide(RectangleShape obj1, RectangleShape obj2)
 {
@@ -48,6 +55,11 @@ const int GO_WIDTH = 320, GO_HEIGHT = 240; // gameover 그림의 크기
 
 
 int main(void) {
+
+	struct Textures t;
+	t.bg.loadFromFile("./resources/images/background.png");
+	t.gameover.loadFromFile("./resources/images/gameover.png"); 
+	t.player.loadFromFile("./resources/images/player.png");
 
 	RenderWindow window(VideoMode(W_WIDTH , W_HEIGHT), "AfterSchool"); // 640*480 사이즈의 윈도우 창을 만듬
 	window.setFramerateLimit(60); // 1초에 60으로 제한함
@@ -78,29 +90,27 @@ int main(void) {
 	char info[40];
 	
 	// 배경
-	Texture bg_texture;
-	bg_texture.loadFromFile("./resources/images/background.jpg");
+
 	Sprite bg_sprite;
-	bg_sprite.setTexture(bg_texture);
+	bg_sprite.setTexture(t.bg);
 	bg_sprite.setPosition(0, 0);
 
 	//gameover
-	Texture gameover_texture;
-	gameover_texture.loadFromFile("./resources/images/gameover.png");
 	Sprite gameover_sprite;
-	gameover_sprite.setTexture(gameover_texture);
+	gameover_sprite.setTexture(t.gameover);
 	gameover_sprite.setPosition((W_WIDTH- GO_WIDTH)/2, (W_HEIGHT-GO_HEIGHT)/2);
 
 	// player
 	struct Player player;
-	player.sprite.setSize(Vector2f(40, 40));
+	player.sprite.setTexture(&t.player);
+	player.sprite.setSize(Vector2f(211, 213));
 	player.sprite.setPosition(100, 100);
 	player.x = player.sprite.getPosition().x;
 	player.y = player.sprite.getPosition().y;
-	player.sprite.setFillColor(Color::Red);
 	player.speed = 5;
 	player.score = 0;
 	player.life = 10;
+	player.sprite.setScale(-1, 1);
 
 	// 총알
 	struct Bullet bullet;
@@ -116,7 +126,7 @@ int main(void) {
 	for (int i = 0; i < ENEMY_NUM; i++)
 	{
 		// TODO : 굉장히 비효율적인 코드임. 나중에 refactoring 
-		enemy[i].explosion_buffer.loadFromFile("./resources/sounds/rumble.flac");
+		enemy[i].explosion_buffer.loadFromFile("./resources/sounds/pop.flac");
 		enemy[i].explosion_sound.setBuffer(enemy[i].explosion_buffer);
 		enemy[i].score = 100;  // 적 잡을 때 얻는 점수
 		enemy[i].respawn_time = 8;
