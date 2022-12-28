@@ -26,7 +26,7 @@ struct Enemy
 
 // 전역변수
 const int ENEMY_NUM = 10;								// enemyh의 최대개수
-const int W_WIDTH = 640, W_HEIGHT = 480; // 창의 크기
+const int W_WIDTH = 1200, W_HEIGHT = 680; // 창의 크기
 const int GO_WIDTH = 320, GO_HEIGHT = 240; // gameover 그림의 크기
 
 
@@ -76,7 +76,6 @@ int main(void) {
 	player.score = 0;
 	player.life = 3;
 
-
 	// 적(enemy)
 	struct Enemy enemy[ENEMY_NUM];
 
@@ -90,11 +89,10 @@ int main(void) {
 
 		enemy[i].sprite.setSize(Vector2f(70, 70));
 		enemy[i].sprite.setFillColor(Color::Yellow);
-		enemy[i].sprite.setPosition(rand()%300+300, rand()%380);
+		enemy[i].sprite.setPosition(rand() % 300 + W_WIDTH * 0.9, rand() % 380);
 		enemy[i].life = 1;
 		enemy[i].speed = -(rand() % 10 + 1);
 	}
-	
 
 	//윈도우가 열려있을 때까지 반복
 	while (window.isOpen())
@@ -118,7 +116,7 @@ int main(void) {
 					{
 						enemy[i].sprite.setSize(Vector2f(70, 70));
 						enemy[i].sprite.setFillColor(Color::Yellow);
-						enemy[i].sprite.setPosition(rand() % 300 + 300, rand() % 380);
+						enemy[i].sprite.setPosition(rand() % 300 + W_WIDTH * 0.9, rand() % 380);
 						enemy[i].life = 1;
 						enemy[i].speed = -(rand() % 10 + 1);
 					}
@@ -153,6 +151,17 @@ int main(void) {
 		
 		for (int i = 0; i < ENEMY_NUM; i++)
 		{
+			// 10초마다 enemy 잰
+			if (spent_time % (1000 * 10) < 10)
+			{
+					enemy[i].sprite.setSize(Vector2f(70, 70));
+					enemy[i].sprite.setFillColor(Color::Yellow);
+					enemy[i].sprite.setPosition(rand() % 300 + W_WIDTH * 0.9, rand() % 380);
+					enemy[i].life = 1;
+					// 10초마다 enemy 속도 + 1
+					enemy[i].speed = -(rand() % 10 + 1 + (spent_time / 1000 / 10));
+			}
+
 			if (enemy[i].life > 0)
 			{
 				//enemy와의 충돌
@@ -200,6 +209,7 @@ int main(void) {
 		if (is_gameover)
 		{
 			window.draw(gameover_sprite);
+			// TODO : 게임이 멈추는 것을 구현할 것 
 		}
 
 		window.display();
