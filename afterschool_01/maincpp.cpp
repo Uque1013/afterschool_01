@@ -40,12 +40,21 @@ struct Enemy
 	int  respawn_time;
 };
 
+struct Item
+{
+	RectangleShape sprite;
+	int delay;
+	int is_presented; // 아이템이 생성 되었는지
+};
+
 struct Textures
 {
 	Texture bg; // 배경 이미지
 	Texture bullet; // 총알 이미지
 	Texture enemy; // 적 이미지
 	Texture gameover; // 게임오버 이미지 
+	Texture item_delay; // 공속 아이템 이미지
+	Texture item_speed; // 이속 아이템 이미지	
 	Texture player; // 플레이어 이미지
 };
 
@@ -62,7 +71,6 @@ const int W_WIDTH = 1200, W_HEIGHT = 680; // 창의 크기
 const int GO_WIDTH = 320, GO_HEIGHT = 240; // gameover 그림의 크기
 
 
-
 int main(void) {
 
 	struct Textures t;
@@ -70,16 +78,19 @@ int main(void) {
 	t.bullet.loadFromFile("./resources/images/3d_blueheart.png");
 	t.enemy.loadFromFile("./resources/images/mongi.png");
 	t.gameover.loadFromFile("./resources/images/gameover.png"); 
+	t.item_delay.loadFromFile("./resources/images/item_delay.png");
+	t.item_speed.loadFromFile("./resources/images/item_speed.png");
 	t.player.loadFromFile("./resources/images/player.png");
 
-	RenderWindow window(VideoMode(W_WIDTH , W_HEIGHT), "AfterSchool"); // 640*480 사이즈의 윈도우 창을 만듬
+	// 윈도우 창 생성
+	RenderWindow window(VideoMode(W_WIDTH , W_HEIGHT), "AfterSchool"); 
 	window.setFramerateLimit(60); // 1초에 60으로 제한함
 
 	srand(time(0));
 
 	long start_time = clock(); // 게임 시작 시간
-	long spent_time;					// 게임 진행 시간
-	long fired_time = 0;					// 최근에 발사한 시간
+	long spent_time;	 // 게임 진행 시간
+	long fired_time = 0; // 최근에 발사한 시간
 	int is_gameover = 0;
 
 	// BGM
@@ -156,6 +167,13 @@ int main(void) {
 		enemy[i].speed = -(rand() % 10 + 1);
 	}
 
+	// item
+	struct Item item[2];
+	item[0].sprite.setTexture(&t.item_speed);
+	item[0].delay = 25000; // 25초
+	item[0].sprite.setSize(Vector2f(70, 70));
+	item[0].is_presented = 1;
+
 	//윈도우가 열려있을 때까지 반복
 	while (window.isOpen())
 	{
@@ -230,7 +248,6 @@ int main(void) {
 			player.sprite.setPosition(player.x, W_HEIGHT-203);
 
 		/* Bullet update */
-		// 총알 발사 TODO : 50개 이후부터는 안나가는 버그 수정할 것
 		printf("bullet_idx %d\n", bullet_idx);
 		if (Keyboard::isKeyPressed(Keyboard::Space))
 		{
@@ -314,6 +331,13 @@ int main(void) {
 			}
 		}
 
+		// item update
+		if (item[0].is_presented)
+		{
+			// TODO : 충돌 시 아이템 효과를 주고 사라진다
+
+		}
+
 		sprintf(info, "life:%d  score:%d  time:%d", player.life, player.score, spent_time / 1000);
 		text.setString(info);
 
@@ -324,6 +348,9 @@ int main(void) {
 		for (int i = 0; i < ENEMY_NUM; i++)
 			if (enemy[i].life > 0)
 				window.draw(enemy[i].sprite);
+		if (item[0].is_presented)
+			window.draw(item[0].sprite);
+
 		window.draw(player.sprite);
 		window.draw(text);
 		for (int i = 0; i < BULLET_NUM; i++) {
