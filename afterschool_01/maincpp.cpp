@@ -94,7 +94,6 @@ int main(void) {
 	char info[40];
 	
 	// 배경
-
 	Sprite bg_sprite;
 	bg_sprite.setTexture(t.bg);
 	bg_sprite.setPosition(0, 0);
@@ -107,7 +106,7 @@ int main(void) {
 	// player
 	struct Player player;
 	player.sprite.setTexture(&t.player);
-	player.sprite.setSize(Vector2f(211, 213));
+	player.sprite.setSize(Vector2f(201, 203));
 	player.sprite.setPosition(80, 80);
 	player.x = player.sprite.getPosition().x;
 	player.y = player.sprite.getPosition().y;
@@ -146,6 +145,10 @@ int main(void) {
 	//윈도우가 열려있을 때까지 반복
 	while (window.isOpen())
 	{
+		spent_time = clock() - start_time;
+		player.x = player.sprite.getPosition().x;
+		player.y = player.sprite.getPosition().y;
+
 		Event event;
 		while (window.pollEvent(event))
 		{
@@ -176,10 +179,13 @@ int main(void) {
 			}
 		}
 
-		spent_time = clock() - start_time;
-		player.x = player.sprite.getPosition().x;
-		player.y = player.sprite.getPosition().y;
+		/* 게임 상태 update */
+		if (player.life <= 0)
+		{
+			is_gameover = 1;
+		}
 
+		/* Player update */
 		// 방향키 start
 		if (Keyboard::isKeyPressed(Keyboard::Left))
 		{
@@ -196,8 +202,22 @@ int main(void) {
 		if (Keyboard::isKeyPressed(Keyboard::Down))
 		{
 			player.sprite.move(0, player.speed);
-		} // 방향키 end
+		} // 방향키 end 
 
+		// Player 이동범위 제한
+		// TODO : 왼쪽 아래쪽 제한을 의도대로 고치기 
+		if (player.x < 0) 
+			player.sprite.setPosition(0, player.y);
+		else if (player.x > W_WIDTH) 
+			player.sprite.setPosition(W_WIDTH, player.y);
+		
+		if (player.y < 0) 
+			player.sprite.setPosition(player.x, 0);
+		else if (player.y > W_HEIGHT) 
+			player.sprite.setPosition(player.x, W_HEIGHT);
+		printf("(%f %f)\n", player.x, player.y);
+
+		/* Bullet update */
 		// 총알 발사
 		if (Keyboard::isKeyPressed(Keyboard::Space))
 		{
@@ -209,17 +229,24 @@ int main(void) {
 			}
 		}
 
+		if (bullet.is_fired)
+		{
+			bullet.sprite.move(bullet.speed, 0);
+			if (bullet.sprite.getPosition().x > W_WIDTH)
+				bullet.is_fired = 0;
+		}
+
+		/* Enemy update */
 		for (int i = 0; i < ENEMY_NUM; i++)
 		{
 			// 10초마다 enemy 리젠
 			if (spent_time % (1000 * enemy[i].respawn_time) < 1000 / 60 + 1)
 			{
-					enemy[i].sprite.setSize(Vector2f(70, 70));
-					enemy[i].sprite.setFillColor(Color::Yellow);
-					enemy[i].sprite.setPosition(rand() % 300 + W_WIDTH * 0.9, rand() % 380);
-					enemy[i].life = 1;
-					// 10초마다 enemy 속도 + 1
-					enemy[i].speed = -(rand() % 10 + 1 + (spent_time / 1000 / enemy[i].respawn_time));
+				enemy[i].sprite.setSize(Vector2f(100, 100));
+				enemy[i].sprite.setPosition(rand() % 300 + W_WIDTH * 0.9, rand() % 380);
+				enemy[i].life = 1;
+				// 10초마다 enemy 속도 + 1
+				enemy[i].speed = -(rand() % 10 + 1 + (spent_time / 1000 / enemy[i].respawn_time));
 			}
 
 			if (enemy[i].life > 0)
@@ -259,19 +286,6 @@ int main(void) {
 
 				enemy[i].sprite.move(enemy[i].speed, 0);
 			}
-		}
-
-		// TODO : 총알이 평생 한 번만 발사되는 버그 수정하기
-		if (bullet.is_fired)
-		{
-			bullet.sprite.move(bullet.speed, 0);
-			if (bullet.sprite.getPosition().x > W_WIDTH)
-				bullet.is_fired = 0;
-		}
-
-		if (player.life <= 0)
-		{
-			is_gameover = 1;
 		}
 
 		sprintf(info, "life:%d  score:%d  time:%d", player.life, player.score, spent_time / 1000);
