@@ -234,17 +234,19 @@ int main(void) {
 		printf("bullet_idx %d\n", bullet_idx);
 		if (Keyboard::isKeyPressed(Keyboard::Space))
 		{
+			// 장전시간 체크 
 			if (spent_time - fired_time > bullet_delay)
 			{
-				// 총알이 발사되어있지 않다면
-				if (!bullet[bullet_idx].is_fired)
-				{
-					bullet[bullet_idx].sprite.setPosition(player.x + 50, player.y + 15);
-					bullet[bullet_idx].is_fired = 1;
-					bullet_idx++; // 다음 총알이 발사할 수 있도록 
-					fired_time = spent_time;
+					// 총알이 발사되어있지 않다면
+					if (!bullet[bullet_idx].is_fired)
+					{
+							bullet[bullet_idx].sprite.setPosition(player.x + 50, player.y + 15);
+							bullet[bullet_idx].is_fired = 1;
+							bullet_idx++; // 다음 총알이 발사할 수 있도록 
+							bullet_idx = bullet_idx % BULLET_NUM;
+							fired_time = spent_time; // 총알 장전
+					}
 				}
-			}
 
 		}
 
