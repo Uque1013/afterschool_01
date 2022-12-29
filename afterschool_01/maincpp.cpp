@@ -206,15 +206,15 @@ int main(void) {
 
 		// Player 이동범위 제한
 		// TODO : 왼쪽 아래쪽 제한을 의도대로 고치기 
-		if (player.x < 0) 
-			player.sprite.setPosition(0, player.y);
+		if (player.x < 201) // 201(그림의 너비)
+			player.sprite.setPosition(201, player.y);
 		else if (player.x > W_WIDTH) 
 			player.sprite.setPosition(W_WIDTH, player.y);
 		
 		if (player.y < 0) 
 			player.sprite.setPosition(player.x, 0);
-		else if (player.y > W_HEIGHT) 
-			player.sprite.setPosition(player.x, W_HEIGHT);
+		else if (player.y > W_HEIGHT-203) // 203(그림의 높이)
+			player.sprite.setPosition(player.x, W_HEIGHT-203);
 		printf("(%f %f)\n", player.x, player.y);
 
 		/* Bullet update */
