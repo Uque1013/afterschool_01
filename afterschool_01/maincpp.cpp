@@ -47,6 +47,7 @@ struct Item
 	RectangleShape sprite;
 	int delay;
 	int is_presented; // 아이템이 생성 되었는지
+	Sound sound;
 	long presented_time;
 	enum item_type type;
 };
@@ -65,6 +66,8 @@ struct Textures
 struct SBuffers
 {
 	SoundBuffer BGM;
+	SoundBuffer item_delay;
+	SoundBuffer item_speed;
 	SoundBuffer pop;
 };
 
@@ -95,6 +98,8 @@ int main(void) {
 
 	struct SBuffers sb;
 	sb.BGM.loadFromFile("./resources/sounds/BGM.ogg");
+	sb.item_delay.loadFromFile("./resources/sounds/delay.wav");
+	sb.item_speed.loadFromFile("./resources/sounds/speed.flac");
 	sb.pop.loadFromFile("./resources/sounds/pop.flac");
 
 	// 윈도우 창 생성
@@ -152,6 +157,7 @@ int main(void) {
 	int bullet_speed = 20;
 	int bullet_idx = 0;
 	int bullet_delay = 500; // 딜레이 0.5초
+	int bullet_delay_max = 100;
 	Sound bullet_sound;
 	bullet_sound.setBuffer(sb.pop);
 
@@ -187,9 +193,11 @@ int main(void) {
 	item[0].sprite.setTexture(&t.item_speed);
 	item[0].delay = 25000; // 25초
 	item[0].type = SPEED;
+	item[0].sound.setBuffer(sb.item_speed);
 	item[1].sprite.setTexture(&t.item_delay);
 	item[1].delay = 20000; // 20초
 	item[1].type = DELAY;
+	item[1].sound.setBuffer(sb.item_delay);
 
 	for (int i = 0; i < ITEM_NUM; i++) 
 	{
@@ -373,20 +381,23 @@ int main(void) {
 			{
 				if (is_collide(player.sprite, item[i].sprite))
 				{
-					// 충돌 시 아이템 효과를 주고 사라진다
+					// 아이템 획득 시 효과를 주고 사라진다
 					switch (item[i].type)
 					{
 					case SPEED: // player 속도
 						player.speed += 2;
 						if (player.speed > player.speed_max)
 							player.speed = player.speed_max;
-						break;
+							break;
 					case DELAY: // player 공속
 						bullet_delay -= 100;
-						break;
+						if (bullet_delay < bullet_delay_max)
+							bullet_delay = bullet_delay_max;
+							break;
 					}
 					item[i].is_presented = 0;
 					item[i].presented_time = spent_time;
+					item[i].sound.play();
 				}
 			}
 		}
