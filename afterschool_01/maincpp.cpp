@@ -17,6 +17,7 @@ struct Player
 {
 	RectangleShape sprite;
 	int speed;
+	int speed_max;
 	int score;
 	int life;
 	float x, y; // 플레이어 좌표
@@ -36,13 +37,18 @@ struct Enemy
 	int life;
 };
 
+enum item_type {
+	SPEED, // 0
+	DELAY // 1
+};
+
 struct Item
 {
 	RectangleShape sprite;
 	int delay;
 	int is_presented; // 아이템이 생성 되었는지
 	long presented_time;
-	int type; 
+	enum item_type type;
 };
 
 struct Textures
@@ -137,6 +143,7 @@ int main(void) {
 	player.x = player.sprite.getPosition().x;
 	player.y = player.sprite.getPosition().y;
 	player.speed = 5;
+	player.speed_max = 15;
 	player.score = 0;
 	player.life = 10;
 	player.sprite.setScale(-1, 1); // 이미지 좌우 반전
@@ -179,10 +186,10 @@ int main(void) {
 	struct Item item[2];
 	item[0].sprite.setTexture(&t.item_speed);
 	item[0].delay = 25000; // 25초
-	item[0].type = 0;
+	item[0].type = SPEED;
 	item[1].sprite.setTexture(&t.item_delay);
 	item[1].delay = 20000; // 20초
-	item[1].type = 1;
+	item[1].type = DELAY;
 
 	for (int i = 0; i < ITEM_NUM; i++) 
 	{
@@ -366,19 +373,21 @@ int main(void) {
 			{
 				if (is_collide(player.sprite, item[i].sprite))
 				{
+					// 충돌 시 아이템 효과를 주고 사라진다
 					switch (item[i].type)
 					{
-					case 0: // player 속도
+					case SPEED: // player 속도
 						player.speed += 2;
+						if (player.speed > player.speed_max)
+							player.speed = player.speed_max;
 						break;
-					case 1: // player 공속
+					case DELAY: // player 공속
 						bullet_delay -= 100;
 						break;
 					}
 					item[i].is_presented = 0;
 					item[i].presented_time = spent_time;
 				}
-				// TODO : 충돌 시 아이템 효과를 주고 사라진다
 			}
 		}
 
