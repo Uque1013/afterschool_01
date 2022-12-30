@@ -347,7 +347,9 @@ int main(void) {
 			}
 		}
 
-		// item update
+		printf("[1] %d > %d ?", spent_time - item[1].presented_time, item[1].delay);
+		printf("%d (%f, %f)\n", item[1].is_presented, item[1].sprite.getPosition().x);
+		// item update TODO : item[1]¿Ã æ»∂‰
 		for (int i = 0; i < ITEM_NUM; i++) 
 		{
 			if (!item[i].is_presented)
