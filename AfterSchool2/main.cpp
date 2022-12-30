@@ -6,6 +6,14 @@
 
 using namespace sf;
 
+const int S = 4;
+
+struct Card
+{
+	RectangleShape sprite;
+	int id;
+};
+
 int main(void)
 {
 	RenderWindow window(VideoMode(1200, 800), "AfterSchool2");
@@ -16,12 +24,23 @@ int main(void)
 
 	Font font;
 	font.loadFromFile("c:/Windows/Fonts/arial.ttf");
+
 	Text text;
 	text.setFont(font);
 	text.setCharacterSize(30);
 	text.setFillColor(Color::White);
 	text.setPosition(0, 0);
 	char info[40];
+
+	struct Card cards[S][S];
+	for (int i = 0; i < S; i++) {
+		for (int j = 0; j < S; j++)
+		{
+			cards[i][j].sprite.setSize(Vector2f(100, 200));
+			cards[i][j].sprite.setPosition(j * 100, i * 200);
+			cards[i][j].sprite.setFillColor(Color::Blue(i * 64, j * 64, 0));
+		}
+	}
 
 	while (window.isOpen())
 	{
@@ -49,6 +68,13 @@ int main(void)
 		text.setString(info);
 
 		window.clear(Color::Black);
+		for (int i = 0; i < S; i++)
+		{
+			for (int j = 0; j < S; j++)
+			{
+				window.draw(cards[i][j].sprite);
+			}
+		}
 
 		window.draw(text);
 
