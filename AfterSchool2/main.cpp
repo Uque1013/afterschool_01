@@ -26,6 +26,10 @@ int main(void)
 	Vector2i mouse_pos;
 	int flipped_num=0; // 현재 뒤집혀진 카드의 갯수 
 
+	long start_time;
+	long spent_time;
+	long delay_time; // 바로 다시 ?로 뒤집혀지지 않도록 딜레이 줌
+
 	Texture t[8 + 1];
 	t[0].loadFromFile("./resources/images/9.png");
 	t[1].loadFromFile("./resources/images/2.jpg");
@@ -62,9 +66,13 @@ int main(void)
 		}
 	}
 
+	start_time = clock();
+	delay_time = start_time;
+
 	while (window.isOpen())
 	{
 		mouse_pos = Mouse::getPosition(window);
+		spent_time = clock() - start_time;
 
 		Event event;
 		while (window.pollEvent(event))
@@ -90,8 +98,14 @@ int main(void)
 								{
 									cards[i][j].is_clicked = 1;
 									flipped_num++;
+									// 두 개를 뒤집었다면
+									if (flipped_num == 2)
+									{
+										delay_time = spent_time;
+									}
 								}
 							}
+
 						}
 					}
 				}
@@ -121,8 +135,8 @@ int main(void)
 			flipped_num = 0;
 		}
 
-		sprintf(info, "(%d, %d) clicks %d \n"
-			, mouse_pos.x, mouse_pos.y, flipped_num);
+		sprintf(info, "(%d, %d) clicks %d %d \n"
+			, mouse_pos.x, mouse_pos.y, spent_time / 1000, delay_time / 1000);
 		text.setString(info);
 
 		window.clear(Color::Black);
