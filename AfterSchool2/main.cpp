@@ -190,8 +190,7 @@ int main(void)
 		}
 
 
-		sprintf(info, "(%d, %d) clicks %d %d\n"
-			, mouse_pos.x, mouse_pos.y, spent_time / 1000, delay_time / 1000);
+		sprintf(info, "%d\n", spent_time / 1000);
 		text.setString(info);
 
 
