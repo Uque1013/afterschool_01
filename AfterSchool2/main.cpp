@@ -24,7 +24,7 @@ int main(void)
 	window.setFramerateLimit(60);
 
 	Vector2i mouse_pos;
-	int click_cnt=0; // 마우스 누른 횟수
+	int flipped_num=0; // 현재 뒤집혀진 카드의 갯수 
 
 	Texture t[8 + 1];
 	t[0].loadFromFile("./resources/images/9.png");
@@ -78,14 +78,19 @@ int main(void)
 			case Event::MouseButtonPressed:
 				if (event.mouseButton.button == Mouse::Left)
 				{
-					click_cnt++; // 필요없는 코드
 					for (int i = 0; i < S; i++)
 					{
 						for (int j = 0; j < S; j++)
 						{
+							// 마우스 위치가 cards[i][j]의 위치에 해당한다면?
 							if (cards[i][j].sprite.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y))
 							{
-								cards[i][j].is_clicked = 1;
+								// 안 뒤집힌 카드만 뒤집음
+								if (cards[i][j].is_clicked == 0)
+								{
+									cards[i][j].is_clicked = 1;
+									flipped_num++;
+								}
 							}
 						}
 					}
@@ -98,16 +103,26 @@ int main(void)
 			for (int j = 0; j < S; j++)
 			{
 				// 클릭이 된 상태면
-				if (cards[i][j].is_clicked)
-				{
-					// 그림이 있는 스프라이트로 변경
+				if (cards[i][j].is_clicked == 1)
+					// 그림이 있는 스프라이트로 변경 (카드 뒤집겠다는 의미)
 					cards[i][j].sprite.setTexture(&t[cards[i][j].type]);
-				}
+				else 
+					// 카드 ?상태
+					cards[i][j].sprite.setTexture(&t[0]);
 			}
 		}
 
+		// 뒤집힌 카드가 2개라면 TODO : 두 번째 카드가 바로 뒤집혀지지 않게 하기
+		if (flipped_num == 2)
+		{
+			for (int i = 0; i < S; i++)
+				for (int j = 0; j < S; j++)
+					cards[i][j].is_clicked == 0;
+			flipped_num = 0;
+		}
+
 		sprintf(info, "(%d, %d) clicks %d \n"
-			, mouse_pos.x, mouse_pos.y, click_cnt);
+			, mouse_pos.x, mouse_pos.y, flipped_num);
 		text.setString(info);
 
 		window.clear(Color::Black);
