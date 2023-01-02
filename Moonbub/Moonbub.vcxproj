@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="rand.c" />
+    <ClCompile Include="shuffle.c" />
     <ClCompile Include="swap.c" />
     <ClCompile Include="switch.c" />
     <ClCompile Include="구조체.c" />
