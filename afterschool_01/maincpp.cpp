@@ -303,7 +303,7 @@ int main(void) {
 		for (int i = 0; i < BULLET_NUM; i++) {
 			if (bullet[i].is_fired)
 			{
-				bullet[i].sprite.move(bullet_speed, 0);
+				bullet[i].sprite.move(bullet_speed, 0); 
 				if (bullet[i].sprite.getPosition().x > W_WIDTH)
 					bullet[i].is_fired = 0;
 			}

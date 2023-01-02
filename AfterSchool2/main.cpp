@@ -14,6 +14,8 @@ struct Card
 {
 	RectangleShape sprite;
 	int id;
+	int type;
+	int is_clicked;
 };
 
 int main(void)
@@ -52,7 +54,10 @@ int main(void)
 		{
 			cards[i][j].sprite.setSize(Vector2f(CARD_W, CARD_H));
 			cards[i][j].sprite.setPosition(j * CARD_W, i * CARD_H);
-			cards[i][j].sprite.setTexture(&t[1 + n / 2]);
+			cards[i][j].sprite.setTexture(&t[0]);
+			cards[i][j].type = 1 + n / 2;
+			cards[i][j].id = n+1;
+			cards[i][j].is_clicked = 0;
 			n++;
 		}
 	}
@@ -73,7 +78,30 @@ int main(void)
 			case Event::MouseButtonPressed:
 				if (event.mouseButton.button == Mouse::Left)
 				{
-					click_cnt++;
+					click_cnt++; // 필요없는 코드
+					for (int i = 0; i < S; i++)
+					{
+						for (int j = 0; j < S; j++)
+						{
+							if (cards[i][j].sprite.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y))
+							{
+								cards[i][j].is_clicked = 1;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < S; i++)
+		{
+			for (int j = 0; j < S; j++)
+			{
+				// 클릭이 된 상태면
+				if (cards[i][j].is_clicked)
+				{
+					// 그림이 있는 스프라이트로 변경
+					cards[i][j].sprite.setTexture(&t[cards[i][j].type]);
 				}
 			}
 		}
