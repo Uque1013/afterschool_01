@@ -1,8 +1,7 @@
 /* TODO list
-* 1) 아이템 : 속도 증가, 데미지 증가
-* 2) 총알 시스템 개편
-* 3) sound effect 개선
-* 4) 총알 위치 체계적으로
+* 변신상태를 의미하는 멤버변수 만들기
+* 변신상태에 대한 지속시간 변수 만들기
+* 변신상태가 바뀌게 되는 시각 변수 만들기
 */
 
 #include <stdio.h>
@@ -20,6 +19,7 @@ struct Player
 	int speed_max;
 	int score;
 	int life;
+	int change;
 	float x, y; // 플레이어 좌표
 };
 

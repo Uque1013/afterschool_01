@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="rand.c" />
     <ClCompile Include="shuffle.c" />
     <ClCompile Include="swap.c" />
