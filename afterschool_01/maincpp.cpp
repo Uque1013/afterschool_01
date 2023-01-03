@@ -39,7 +39,11 @@ struct Enemy
 
 enum item_type {
 	SPEED, // 0
-	DELAY // 1
+	DELAY, // 1
+	OUTLIFE, // 2
+	PLUSLIFE, // 3
+	PL2, // 4
+	PL3 // 5
 };
 
 struct Item
@@ -60,6 +64,10 @@ struct Textures
 	Texture gameover; // 게임오버 이미지 
 	Texture item_delay; // 공속 아이템 이미지
 	Texture item_speed; // 이속 아이템 이미지	
+	Texture item_outlife; // 플레이어 목숨 뺏는 아이템 이미지
+	Texture item_pluslife; // 플레이어 목숨 더해주는 아이템 이미지
+	Texture item_ch_pl2; // 플레이어2 이미지 바꿈
+	Texture item_ch_pl3; // 플레리어3 이미지 바꿈
 	Texture player; // 플레이어 이미지
 };
 
@@ -68,6 +76,10 @@ struct SBuffers
 	SoundBuffer BGM;
 	SoundBuffer item_delay;
 	SoundBuffer item_speed;
+	SoundBuffer item_outlife;
+	SoundBuffer item_pluslife;
+	SoundBuffer item_ch_pl2;
+	SoundBuffer item_ch_pl3;
 	SoundBuffer pop;
 };
 
@@ -80,7 +92,7 @@ int is_collide(RectangleShape obj1, RectangleShape obj2)
 // 전역변수
 const int ENEMY_NUM = 10;								// enemy의 최대개수
 const int BULLET_NUM = 50;							// bullet의 최대개수
-const int ITEM_NUM = 2;									// item의 최대종류
+const int ITEM_NUM = 6;									// item의 최대종류
 const int W_WIDTH = 1200, W_HEIGHT = 680; // 창의 크기
 const int GO_WIDTH = 320, GO_HEIGHT = 240; // gameover 그림의 크기
 
@@ -94,12 +106,20 @@ int main(void) {
 	t.gameover.loadFromFile("./resources/images/gameover.png"); 
 	t.item_delay.loadFromFile("./resources/images/item_delay.png");
 	t.item_speed.loadFromFile("./resources/images/item_speed.png");
+	t.item_outlife.loadFromFile("./resources/images/item_outlife.png");
+	t.item_pluslife.loadFromFile("./resources/images/item_pluslife.png");
+	t.item_ch_pl2.loadFromFile("./resources/images/player2.png");
+	t.item_ch_pl3.loadFromFile("./resources/images/player3.png");
 	t.player.loadFromFile("./resources/images/player.png");
 
 	struct SBuffers sb;
 	sb.BGM.loadFromFile("./resources/sounds/BGM.ogg");
 	sb.item_delay.loadFromFile("./resources/sounds/delay.wav");
 	sb.item_speed.loadFromFile("./resources/sounds/speed.flac");
+	sb.item_outlife.loadFromFile("./resources/sounds/speed.flac");
+	sb.item_pluslife.loadFromFile("./resources/sounds/delay.wav");
+	sb.item_ch_pl2.loadFromFile("./resources/sounds/speed.flac");
+	sb.item_ch_pl3.loadFromFile("./resources/sounds/delay.wav");
 	sb.pop.loadFromFile("./resources/sounds/pop.flac");
 
 	// 윈도우 창 생성
@@ -189,15 +209,37 @@ int main(void) {
 	}
 
 	// item
-	struct Item item[2];
+	struct Item item[6];
 	item[0].sprite.setTexture(&t.item_speed);
-	item[0].delay = 25000; // 25초
+	item[0].delay = 15000; // 15초
 	item[0].type = SPEED;
 	item[0].sound.setBuffer(sb.item_speed);
+
 	item[1].sprite.setTexture(&t.item_delay);
-	item[1].delay = 20000; // 20초
+	item[1].delay = 10000; // 10초
 	item[1].type = DELAY;
 	item[1].sound.setBuffer(sb.item_delay);
+
+	item[2].sprite.setTexture(&t.item_outlife);
+	item[2].delay = 18000; // 18초
+	item[2].type = OUTLIFE;
+	item[2].sound.setBuffer(sb.item_outlife);
+
+	item[3].sprite.setTexture(&t.item_pluslife);
+	item[3].delay = 20000; // 20초
+	item[3].type = PLUSLIFE;
+	item[3].sound.setBuffer(sb.item_pluslife);
+
+	item[4].sprite.setTexture(&t.item_ch_pl2);
+	item[4].delay = 20000; // 20초
+	item[4].type = PL2;
+	item[4].sound.setBuffer(sb.item_ch_pl2);
+
+	item[5].sprite.setTexture(&t.item_ch_pl3);
+	item[5].delay = 21000; // 21초
+	item[5].type = PL3;
+	item[5].sound.setBuffer(sb.item_ch_pl3);
+
 
 	for (int i = 0; i < ITEM_NUM; i++) 
 	{
@@ -394,6 +436,18 @@ int main(void) {
 						if (bullet_delay < bullet_delay_max)
 							bullet_delay = bullet_delay_max;
 							break;
+					case OUTLIFE: // player 목숨 뺏기
+						player.life -= 1;
+						break;
+					case PLUSLIFE: // player 목숨 더하기
+						player.life += 1;
+						break;
+					case PL2:
+						player.sprite.setTexture(&t.item_ch_pl2);
+						break;
+					case PL3:
+						player.sprite.setTexture(&t.item_ch_pl3);
+						break;
 					}
 					item[i].is_presented = 0;
 					item[i].presented_time = spent_time;
