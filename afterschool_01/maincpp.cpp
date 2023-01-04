@@ -1,7 +1,4 @@
 /* TODO list
-* 변신상태를 의미하는 멤버변수 만들기
-* 변신상태에 대한 지속시간 변수 만들기
-* 변신상태가 바뀌게 되는 시각 변수 만들기
 */
 
 #include <stdio.h>
@@ -19,7 +16,7 @@ struct Player
 	int speed_max;
 	int score;
 	int life;
-	int change;
+	int change; // 변신상태
 	float x, y; // 플레이어 좌표
 };
 
@@ -59,6 +56,9 @@ struct Item
 struct Textures
 {
 	Texture bg; // 배경 이미지
+	Texture bg2; // 2번째 배경 이미지
+	Texture bg3; // 3번째 배경 이미지
+	Texture bg4; // 4번째 배경 이미지
 	Texture bullet; // 총알 이미지
 	Texture enemy; // 적 이미지
 	Texture gameover; // 게임오버 이미지 
@@ -101,6 +101,9 @@ int main(void) {
 
 	struct Textures t;
 	t.bg.loadFromFile("./resources/images/background.png");
+	t.bg2.loadFromFile("./resources/images/background2.png");
+	t.bg3.loadFromFile("./resources/images/background3.png");
+	t.bg4.loadFromFile("./resources/images/background4.png");
 	t.bullet.loadFromFile("./resources/images/3d_blueheart.png");
 	t.enemy.loadFromFile("./resources/images/mongi.png");
 	t.gameover.loadFromFile("./resources/images/gameover.png"); 
@@ -172,6 +175,7 @@ int main(void) {
 	player.score = 0;
 	player.life = 10;
 	player.sprite.setScale(-1, 1); // 이미지 좌우 반전
+	int ch_time = 5	; // 플레이어가 변신한 시간
 
 	// 총알
 	int bullet_speed = 20;
@@ -267,18 +271,6 @@ int main(void) {
 				// 키보드를 눌렀을 때 (누른 순간만을 감지)
 			case Event::KeyPressed:
 			{
-				//// 스페이스 누르면 모든 enemy 다시 출현
-				//if (event.key.code == Keyboard::Space)
-				//{
-				//	for (int i = 0; i < ENEMY_NUM; i++)
-				//	{
-				//		enemy[i].sprite.setSize(Vector2f(70, 70));
-				//		enemy[i].sprite.setFillColor(Color::Yellow);
-				//		enemy[i].sprite.setPosition(rand() % 300 + W_WIDTH * 0.9, rand() % 380);
-				//		enemy[i].life = 1;
-				//		enemy[i].speed = -(rand() % 10 + 1);
-				//	}
-				//}
 				break;
 			}
 
@@ -350,6 +342,15 @@ int main(void) {
 					bullet[i].is_fired = 0;
 			}
 		}
+		
+		// 배경 이미지 설정
+		if (player.score >= 4500)
+			bg_sprite.setTexture(t.bg2);
+		if (player.score >= 8200)
+			bg_sprite.setTexture(t.bg3);
+		if (player.score >= 10000)
+			bg_sprite.setTexture(t.bg4);
+
 
 		/* Enemy update */
 		for (int i = 0; i < ENEMY_NUM; i++)
@@ -444,9 +445,11 @@ int main(void) {
 						break;
 					case PL2:
 						player.sprite.setTexture(&t.item_ch_pl2);
+						enemy_score += 300;
 						break;
 					case PL3:
 						player.sprite.setTexture(&t.item_ch_pl3);
+						enemy_score += 800;
 						break;
 					}
 					item[i].is_presented = 0;

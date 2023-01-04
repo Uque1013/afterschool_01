@@ -20,6 +20,11 @@ struct Card
 	int is_cleared; // 정답을 맞춘 카드인지
 };
 
+struct SBuffers
+{
+	Texture turn; // 카드를 뒤집었을 때 다는 소리
+};
+
 void swap_card(struct Card* c1, struct Card* c2)
 {
 	struct Card temp = *c1;

@@ -69,8 +69,8 @@ int main(void)
 				if (event.key.code == Keyboard::Space)
 				{
 					// มกวม
+					player.jumping_time = spent_time;
 					player.is_jumping = 1;
-
 				}
 				break;
 			}
