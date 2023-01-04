@@ -55,6 +55,13 @@ int main(void)
 			case Event::Closed:
 				window.close();
 				break;
+			case Event::KeyPressed:
+				if (event.key.code == Keyboard::Space)
+				{
+					// มกวม
+					player.sprite.move(0, -3);
+				}
+				break;
 			default:
 				break;
 			}
