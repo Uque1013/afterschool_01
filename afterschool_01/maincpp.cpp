@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <SFML/Audio.hpp>
+#include <Windows.h>
 
 using namespace sf;
 
@@ -98,6 +99,12 @@ const int GO_WIDTH = 320, GO_HEIGHT = 240; // gameover 그림의 크기
 
 
 int main(void) {
+
+	// console 가리는 방법
+#ifdef WIN32
+	HWND hwnd = GetConsoleWindow();
+#endif 
+
 
 	struct Textures t;
 	t.bg.loadFromFile("./resources/images/background.png");
@@ -445,11 +452,11 @@ int main(void) {
 						break;
 					case PL2:
 						player.sprite.setTexture(&t.item_ch_pl2);
-						enemy_score += 300;
+						enemy_score += 200;
 						break;
 					case PL3:
 						player.sprite.setTexture(&t.item_ch_pl3);
-						enemy_score += 800;
+						enemy_score += 300;
 						break;
 					}
 					item[i].is_presented = 0;
